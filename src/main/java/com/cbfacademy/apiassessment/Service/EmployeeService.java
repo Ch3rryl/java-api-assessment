@@ -11,7 +11,7 @@ public interface EmployeeService {
     List<Employee> getAllEmployees(UUID id);
 
 
-    Employee getEmployeebyId(UUID id);
+    Employee getEmployeeById(UUID id);
 
   
     Employee createEmployee(Employee employee);

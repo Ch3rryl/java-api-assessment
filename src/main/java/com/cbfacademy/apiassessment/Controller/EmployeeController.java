@@ -3,6 +3,7 @@ package com.cbfacademy.apiassessment.Controller;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,16 +16,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cbfacademy.apiassessment.Model.Employee;
+import com.cbfacademy.apiassessment.Service.EmployeeService;
 
 
 @RestController
 @RequestMapping("/api/employees")
 public class EmployeeController {
     
-    String EmployeeService employeeService;
+    private EmployeeService employeeService;
     
-public EmployeeController(EmployeeService employeeService) {
-    this.employeeService = employeeService;
+    @Autowired
+    public EmployeeController(EmployeeService employeeService) {
+        this.employeeService = employeeService;
 }
 
 //------- get mapping --------------
