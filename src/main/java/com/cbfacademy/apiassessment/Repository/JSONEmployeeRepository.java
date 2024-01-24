@@ -1,7 +1,14 @@
 package com.cbfacademy.apiassessment.Repository;
 
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.Writer;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -17,6 +24,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import com.google.gson.reflect.TypeToken;
 
 @Repository
 @Primary
@@ -46,55 +54,55 @@ public class JSONEmployeeRepository implements EmployeeRepository {
         }
     } 
 
+        private Map<UUID, Employee> loadDataFromJson() {
+        try (Reader reader = new FileReader(filePath)) {
+            Type type = new TypeToken<Map<UUID, Employee>>() {
+            }.getType();
+
+            return gson.fromJson(reader, type);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new HashMap<>();
+    }
+
+        private void saveDataToJson() {
+        try (Writer writer = new FileWriter(filePath)) {
+            gson.toJson(database, writer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+        @Override
+        public Iterable<Employee> findAll() {
+            return database.values();
+        }
+
+        @Override
+        public Optional<Employee> findById(UUID id) {
+            return Optional.ofNullable(database.get(id));
+        }
+
+        @Override
+        public <S extends Employee> S save(S entity) {
+            database.put(entity.getId(), entity);
+            saveDataToJson();
+
+            return entity;
+        }
+
+        @Override
+        public void deleteById(UUID id) {
+            database.remove(id);
+            saveDataToJson();
+        }
+
+
+
 }
 
-
-//     private Map<UUID, IOU> loadDataFromJson() {
-//         try (Reader reader = new FileReader(filePath)) {
-//             Type type = new TypeToken<Map<UUID, IOU>>() {
-//             }.getType();
-
-//             return gson.fromJson(reader, type);
-//         } catch (IOException e) {
-//             e.printStackTrace();
-//         }
-//         return new HashMap<>();
-//     }
-
-//     private void saveDataToJson() {
-//         try (Writer writer = new FileWriter(filePath)) {
-//             gson.toJson(database, writer);
-//         } catch (IOException e) {
-//             e.printStackTrace();
-//         }
-//     }
-
 //     @Override
-//     public Iterable<IOU> findAll() {
-//         return database.values();
-//     }
-
-//     @Override
-//     public Optional<IOU> findById(UUID id) {
-//         return Optional.ofNullable(database.get(id));
-//     }
-
-//     @Override
-//     public <S extends IOU> S save(S entity) {
-//         database.put(entity.getId(), entity);
-//         saveDataToJson();
-
-//         return entity;
-//     }
-
-//     @Override
-//     public void deleteById(UUID id) {
-//         database.remove(id);
-//         saveDataToJson();
-//     }
-
-//     @Override
-//     public List<IOU> searchByBorrower(String name) {
+//     public List<Employee> searchByBorrower(String name) {
 //         return database.values().stream()
 //                 .filter(iou -> iou.getBorrower().equals(name))
 //                 .collect(Collectors.toList());
