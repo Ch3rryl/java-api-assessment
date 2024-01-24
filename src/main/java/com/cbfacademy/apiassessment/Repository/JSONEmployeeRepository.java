@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
+import java.lang.reflect.Type;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,6 +22,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
@@ -33,7 +35,7 @@ public class JSONEmployeeRepository implements EmployeeRepository {
     private final Gson gson;
     private final Map<UUID, Employee> database;
 
-        public ListEmployeeRepository(@Value("${json.file.path}") String filePath) {
+        public JSONEmployeeRepository(@Value("${json.file.path}") String filePath) {
         this.filePath = filePath;
         gson = new GsonBuilder()
                 .registerTypeAdapter(Instant.class, new InstantTypeAdapter())
@@ -75,6 +77,7 @@ public class JSONEmployeeRepository implements EmployeeRepository {
     }
         @Override
         public Iterable<Employee> findAll() {
+        // public Iterable<Employee> findAll() {
             return database.values();
         }
 
@@ -84,7 +87,8 @@ public class JSONEmployeeRepository implements EmployeeRepository {
         }
 
         @Override
-        public <S extends Employee> S save(S entity) {
+        public Employee save(Employee entity) {
+        // public <S extends Employee> S save(S entity) {
             database.put(entity.getId(), entity);
             saveDataToJson();
 
@@ -92,26 +96,8 @@ public class JSONEmployeeRepository implements EmployeeRepository {
         }
 
         @Override
-        public void deleteById(UUID id) {
-            database.remove(id);
+        public void delete(Employee entity) {
+            database.remove(entity.getId());
             saveDataToJson();
         }
-
-
-
 }
-
-//     @Override
-//     public List<Employee> searchByBorrower(String name) {
-//         return database.values().stream()
-//                 .filter(iou -> iou.getBorrower().equals(name))
-//                 .collect(Collectors.toList());
-//     }
-
-//     @Override
-//     public List<IOU> searchByLender(String name) {
-//         return database.values().stream()
-//                 .filter(iou -> iou.getLender().equals(name))
-//                 .collect(Collectors.toList());
-//     }
-// }
