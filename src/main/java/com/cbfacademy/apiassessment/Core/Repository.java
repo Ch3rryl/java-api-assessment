@@ -1,12 +1,14 @@
 package com.cbfacademy.apiassessment.Core;
 
-import java.util.List;
+import java.util.Optional;
+
+import com.cbfacademy.apiassessment.Model.Employee;
 
 public interface Repository<T, ID> {
 
-    List<T> findAll();
+    Iterable<Employee> findAll();
 
-    T findById(ID id);
+    Optional<Employee> findById(ID id);
 
     T save(T entity);
 

@@ -45,13 +45,13 @@ public class EmployeeController {
 
     @PostMapping
     public ResponseEntity<Employee> addEmployee(@RequestBody Employee employee) {
-        Employee savedEmployee = employeeService.addEmployee(employee);
+        Employee savedEmployee = employeeService.createEmployee(employee);
         return new ResponseEntity<>(savedEmployee, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Employee> replaceEmployee(@PathVariable UUID id, @RequestBody Employee employee) {
-        Employee updatedEmployee = employeeService.replaceEmployee(id, employee);
+        Employee updatedEmployee = employeeService.updateEmployee(id, employee);
         return updatedEmployee != null ? ResponseEntity.ok(updatedEmployee) : ResponseEntity.notFound().build();
     }
 

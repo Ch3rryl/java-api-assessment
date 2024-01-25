@@ -100,4 +100,12 @@ public class JSONEmployeeRepository implements EmployeeRepository {
             database.remove(entity.getId());
             saveDataToJson();
         }
+
+        @Override
+        public void deleteEmployee(UUID id) {
+            database.remove(entity.getId());
+            saveDataToJson();
+        }
+
+
 }

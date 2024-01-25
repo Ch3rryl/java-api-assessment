@@ -8,7 +8,7 @@ import com.cbfacademy.apiassessment.Model.Employee;
 public interface EmployeeService {
 
 
-    List<Employee> getAllEmployees(UUID id);
+    List<Employee> getAllEmployees();
 
 
     Employee getEmployeeById(UUID id);
